@@ -1,10 +1,10 @@
 from django.conf.urls import include, url
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 
-def home(request):
-    return HttpResponse("<b>The thing!!!!!!</b>")
+def redirect(request):
+    return HttpResponseRedirect("/stocks/stocks")
 
 urlpatterns = [
-    url(r'^$',home),
     url(r'^stocks/', include('Stocks.urls')),
+    url(r'^.*$', redirect),
 ]
