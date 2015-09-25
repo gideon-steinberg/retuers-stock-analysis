@@ -29,11 +29,12 @@ class Migration(migrations.Migration):
                 ('sell', models.IntegerField()),
                 ('no_opinion', models.IntegerField()),
                 ('mean', models.FloatField()),
+                ('mean_last_month', models.FloatField()),
                 ('consensus', models.CharField(max_length=200)),
                 ('dividend', models.CharField(max_length=200)),
                 ('price_earnings', models.CharField(max_length=200)),
-                ('mean_last_month', models.FloatField()),
                 ('time', models.TimeField()),
+                ('description', models.CharField(max_length=200)),
             ],
         ),
     ]

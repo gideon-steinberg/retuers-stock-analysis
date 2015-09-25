@@ -28,6 +28,7 @@ class StockValue(models.Model):
     dividend = models.CharField(max_length=200)
     price_earnings = models.CharField(max_length=200)
     time = models.TimeField()
+    description = models.CharField(max_length=200)
     
     def __str__(self):
         return self.id
@@ -35,12 +36,12 @@ class StockValue(models.Model):
     @staticmethod
     def create_stock_value(stock_id, buy, outperform, hold, underperform, sell,
                            no_opinion, mean, mean_last_month, consensus, dividend,
-                           price_earnings):
+                           price_earnings, description):
         stock_value = StockValue(stock_id=stock_id, buy= buy, outperform= outperform,
                                  hold= hold, underperform=underperform, sell= sell,
                                  no_opinion= no_opinion,mean= mean, mean_last_month=mean_last_month,
                                  consensus=consensus, dividend=dividend, price_earnings=price_earnings,
-                                 time= timezone.now())
+                                 time= timezone.now(), description=description)
         stock_value.save()
         return stock_value
     
@@ -63,12 +64,15 @@ class StockValue(models.Model):
                 StockValue.create_stock_value(stock.pk, values[0], values[1],
                                               values[2], values[3], values[4],
                                               values[5], values[6],values[7],
-                                              values[8], values[9], values[10])
+                                              values[8], values[9], values[10],
+                                              values[11])
                 
     def get_row_style(self):
         style = ""
         if self.mean <= 2:
             style = style + "background-color:#00ff00;"
+        if self.mean >= 3:
+            style = style + "background-color:#ff0000;color: #ffffff;"
         if self.get_mean_difference() <= -1:
             style = style + "font-weight: bold;"
         return style

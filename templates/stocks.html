@@ -4,34 +4,43 @@
     <thead>
       <tr>
         <td> <strong> Code </strong> </td>
-        <td> <strong> Buy </strong> </td>
-        <td> <strong> OutPerform </strong> </td>
-        <td> <strong> Hold </strong> </td>
-        <td> <strong> UnderPerform </strong> </td>
-        <td> <strong> Sell </strong> </td>
-        <td> <strong> Mean </strong> </td>
-        <td> <strong> Mean Difference </strong> </td>
+        <td> <strong> Description </strong> </td>
+        <td class="text-center"> <strong> Buy </strong> </td>
+        <td class="text-center"> <strong> OutPerform </strong> </td>
+        <td class="text-center"> <strong> Hold </strong> </td>
+        <td class="text-center"> <strong> UnderPerform </strong> </td>
+        <td class="text-center"> <strong> Sell </strong> </td>
+        <td class="text-center"> <strong> Mean </strong> </td>
+        <td class="text-center"> <strong> Mean Delta </strong> </td>
         <td> <strong> Consensus </strong> </td>
-        <td> <strong> Dividend </strong> </td>
-        <td> <strong> Price Earnings </strong> </td>
+        <td class="text-center"> <strong> Dividend </strong> </td>
+        <td class="text-center"> <strong> PE </strong> </td>
         <td> <strong> Link </strong> </td>
+        <td> </td>
       </tr>
     </thead>
     <tbody>
       {% for stock_value in stock_values %}
         <tr>
           <td style='{{stock_value.get_row_style}}'> {{stock_value.get_stock_code}} </td>
-          <td style='{{stock_value.get_row_style}}'> {{stock_value.buy}} </td>
-          <td style='{{stock_value.get_row_style}}'> {{stock_value.outperform}} </td>
-          <td style='{{stock_value.get_row_style}}'> {{stock_value.hold}} </td>
-          <td style='{{stock_value.get_row_style}}'> {{stock_value.underperform}} </td>
-          <td style='{{stock_value.get_row_style}}'> {{stock_value.sell}} </td>
-          <td style='{{stock_value.get_row_style}}'> {{stock_value.mean}} </td>
-          <td style='{{stock_value.get_row_style}}'> {{stock_value.get_mean_difference}} </td>
+          <td style='{{stock_value.get_row_style}}'> {{stock_value.description}} </td>
+          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.buy}} </td>
+          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.outperform}} </td>
+          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.hold}} </td>
+          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.underperform}} </td>
+          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.sell}} </td>
+          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.mean}} </td>
+          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.get_mean_difference}} </td>
           <td style='{{stock_value.get_row_style}}'> {{stock_value.consensus}} </td>
-          <td style='{{stock_value.get_row_style}}'> {{stock_value.dividend}} </td>
-          <td style='{{stock_value.get_row_style}}'> {{stock_value.price_earnings}} </td> 
+          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.dividend}} </td>
+          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.price_earnings}} </td> 
           <td> <a href="http://www.reuters.com/finance/stocks/analyst?symbol={{stock_value.get_stock_code}}">{{stock_value.get_stock_code}}</a></td>
+          <td>
+              <form action="remove_stock">
+                <input type="hidden" name="stock" value="{{stock_value.get_stock_code}}" />
+                <button type="submit" class="btn btn-default" >  <span class="glyphicon glyphicon-minus text-danger"></span>&nbsp; </button>
+              </form>
+          </td>
         </tr>
       {% endfor %}
     </tbody>
@@ -45,17 +54,6 @@
       </tr>
     </thead>
     <tbody>
-      {% for stock in stocks %}
-          <tr>
-            <td class="col-xs-2"> {{stock.code}} </td>
-            <td>
-              <form action="remove_stock">
-                <input type="hidden" name="stock" value="{{stock.code}}" />
-                <button type="submit" class="btn btn-default" >  <span class="glyphicon glyphicon-minus text-danger"></span>&nbsp; </button>
-              </form>
-            </td>
-          </tr>
-      {% endfor %}
       <tr>
         <form action="add_stock">
           <td class="col-xs-2"> <input type="text" name="stock"> </td>

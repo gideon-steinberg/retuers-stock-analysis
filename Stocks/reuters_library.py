@@ -12,6 +12,7 @@ class ReutersLibrary:
     DIVIDENDS_XPATH = '//*[@id="overallRatios"]/div/div[2]/table/tbody/tr[5]/td[2]/strong/text()'
     PRICE_EARTINGS_XPATH ='//*[@id="companyVsIndustry"]/div/div[2]/table/tbody/tr[2]/td[2]/text()'
     MEAN_LAST_MONTH_XPATH = '//*[@id="content"]/div[2]/div/div[2]/div[1]/div[4]/div[2]/table/tbody/tr[9]/td[3]/text()'
+    DESCRIPTION_XPATH = '//*[@id="sectionTitle"]/h1/text()'
 
     #=================FUNCTIONS=================#
 
@@ -33,5 +34,6 @@ class ReutersLibrary:
         values.append(base_response.xpath(ReutersLibrary.CONSENSUS_XPATH)[0])
         values.append(overview_response.xpath(ReutersLibrary.DIVIDENDS_XPATH)[0])
         values.append(overview_response.xpath(ReutersLibrary.PRICE_EARTINGS_XPATH)[0])
+        values.append(base_response.xpath(ReutersLibrary.DESCRIPTION_XPATH)[0])
 
         return values

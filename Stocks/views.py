@@ -28,5 +28,5 @@ def stocks(request):
         stock_value = models.StockValue.objects.filter(stock_id=stock.pk).order_by("time").last()
         if stock_value != None:
             stock_values.append(stock_value)
-    context = {'stock_values': stock_values, 'stocks': stocks}
+    context = {'stock_values': stock_values}
     return render(request, 'stocks.html', context)
