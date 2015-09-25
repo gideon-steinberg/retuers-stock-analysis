@@ -33,7 +33,7 @@ class ReutersLibrary:
         values.append(base_response.xpath(ReutersLibrary.MEAN_LAST_MONTH_XPATH)[0])
         values.append(base_response.xpath(ReutersLibrary.CONSENSUS_XPATH)[0])
         values.append(overview_response.xpath(ReutersLibrary.DIVIDENDS_XPATH)[0])
-        values.append(overview_response.xpath(ReutersLibrary.PRICE_EARTINGS_XPATH)[0])
+        values.append(overview_response.xpath(ReutersLibrary.PRICE_EARTINGS_XPATH)[0].strip())
         values.append(base_response.xpath(ReutersLibrary.DESCRIPTION_XPATH)[0])
 
         return values

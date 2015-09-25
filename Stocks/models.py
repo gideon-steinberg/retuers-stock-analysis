@@ -14,6 +14,16 @@ class Stock(models.Model):
         stock.save()
         return stock
     
+    def create_stock_value(self):
+        values = ReutersLibrary.get_stock_values(self.code)
+        if len(values) > 7:
+            return StockValue.create_stock_value(self.pk, values[0], values[1],
+                                                 values[2], values[3], values[4],
+                                                 values[5], values[6],values[7],
+                                                 values[8], values[9], values[10],
+                                                 values[11])
+        return None
+    
 class StockValue(models.Model):
     stock_id = models.CharField(max_length=200)
     buy = models.IntegerField()
@@ -50,22 +60,19 @@ class StockValue(models.Model):
         return stock.code
     
     def get_mean_difference(self):
-        difference = self.mean - self.mean_last_month
+        difference = float(self.mean) - float(self.mean_last_month)
         if difference == 0:
             difference = ""
+        else:
+            # formatting......
+            difference = float(format(difference, '.4f'))
         return difference
     
     @staticmethod
     def update_stock_values():
         stocks = Stock.objects.all()
         for stock in stocks:
-            values = ReutersLibrary.get_stock_values(stock.code)
-            if len(values) > 7:
-                StockValue.create_stock_value(stock.pk, values[0], values[1],
-                                              values[2], values[3], values[4],
-                                              values[5], values[6],values[7],
-                                              values[8], values[9], values[10],
-                                              values[11])
+            stock.create_stock_value()
                 
     def get_row_style(self):
         style = ""
