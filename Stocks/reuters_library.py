@@ -52,4 +52,8 @@ class ReutersLibrary:
     @staticmethod
     def get_NZX():
         response = ReutersLibrary.get_response("", ReutersLibrary.NZX_URL)
-        return response.xpath(ReutersLibrary.NZX_XPATH)
+        stocks = response.xpath(ReutersLibrary.NZX_XPATH)
+        stocks_with_nz = []
+        for stock in stocks:
+            stocks_with_nz.append(stock + ".NZ")
+        return stocks_with_nz

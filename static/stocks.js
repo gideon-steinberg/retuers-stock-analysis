@@ -199,6 +199,8 @@ function parse_category_list(data){
     categories.push(data[i]); 
   }
   
+  
+  // TODO: fix this mess!
   var select = $("select.associate-select-category");
   populate_select(select, categories);
   
@@ -212,6 +214,12 @@ function parse_category_list(data){
   populate_select(select, categories);
   
   form = $("form.filter-form");
+  form.removeAttr("hidden");
+  
+  select = $("select.disassociate-category-select");
+  populate_select(select, categories);
+  
+  form = $("form.disassociate-category-form");
   form.removeAttr("hidden");
 }
 

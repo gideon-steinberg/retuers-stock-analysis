@@ -129,25 +129,25 @@ def associate_stock_with_categories(code, category_name):
     except models.Category.DoesNotExist:
         return
     
-    try:
-        models.CategoryStock.objects.get(stock_id=stock.pk, category_id=category.pk)
-    except models.CategoryStock.DoesNotExist:
-        models.CategoryStock.create_category_stock(category.pk, stock.pk)
-    return
+    models.CategoryStock.create_category_stock(category.pk, stock.pk)
 
-def disassociate_stock_with_categories(request):
+def disassociate_stock_with_categories_request(request):
     code = request.GET.get('stock')
     category_name = request.GET.get('category')
+    disassociate_stock_with_categories(code, category_name)
+    return HttpResponseRedirect("/stocks/stocks")
+    
+def disassociate_stock_with_categories(code, category_name):
     if code is None or category_name is None:
-        return HttpResponseRedirect("/stocks/stocks")
+        return
     try:
         stock = models.Stock.objects.get(code=code)
     except models.Stock.DoesNotExist:
-        return HttpResponseRedirect("/stocks/stocks")
+        return
     try:
         category = models.Category.objects.get(name=category_name)
     except models.Category.DoesNotExist:
-        return HttpResponseRedirect("/stocks/stocks")
+        return
     try:
         category_stocks = models.CategoryStock.objects.filter(stock_id=stock.pk,
                                                            category_id=category.pk)
@@ -155,10 +155,26 @@ def disassociate_stock_with_categories(request):
             category_stock.delete()
     except models.CategoryStock.DoesNotExist:
         pass
+
+def disassociate_stock_from_category_request(request):
+    category_name = request.GET.get('category')
+    disassociate_stock_from_category(category_name)
     return HttpResponseRedirect("/stocks/stocks")
 
+def disassociate_stock_from_category(category_name):    
+    try:
+        category = models.Category.objects.get(name=category_name)
+    except models.Category.DoesNotExist:
+        return
+    try:
+        category_stocks = models.CategoryStock.objects.filter(category_id=category.pk)
+        for category_stock in category_stocks:
+            category_stock.delete()
+    except models.CategoryStock.DoesNotExist:
+        pass
 
 def add_stocks(stock_list, category):
+    disassociate_stock_from_category(category)
     add_category(category)
     for stock in stock_list:
         add_stock(stock)

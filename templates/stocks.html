@@ -24,6 +24,11 @@
     <button type="submit" class="btn btn-default">Remove Category</button>
   </form>
   
+  <form hidden="true" class="form-inline disassociate-category-form" action="disassociate_stock_from_category">
+    <select class="form-control disassociate-category-select" name="category" > </select>
+    <button type="submit" class="btn btn-default">Remove Stocks from Category</button>
+  </form>
+  
   <form hidden="true" class="form-inline filter-form" action="stocks">
     <select class="form-control filter-category-select" name="category" > </select>
     <button type="submit" class="btn btn-default">Filter</button>
