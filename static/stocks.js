@@ -140,6 +140,10 @@ function create_tr(data) {
   add_category_elements(tr, data);
   
   tbody.append(tr);
+  
+  var progress = $("progress.stock-progress");
+  var progress_value = parseInt(progress.attr("value"));
+  progress.attr("value", progress_value + 1);
 }
 
 function parse_stock_list(data){
@@ -153,6 +157,11 @@ function parse_stock_list(data){
   }
   
   length = stocks.length;
+  
+  var progress = $("progress.stock-progress");
+  progress.attr("max", length);
+  progress.attr("value", 0);
+  progress.removeAttr("hidden");
 
   for (i = 0; i < length; i++) {
     $.ajax({

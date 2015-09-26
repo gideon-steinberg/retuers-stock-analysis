@@ -72,7 +72,9 @@ def stock_info(request):
             dictionary["price_earnings"] = stock_value.price_earnings
         else:
             base_response = ReutersLibrary.get_response(stock.code)
-            dictionary["description"] = base_response.xpath(ReutersLibrary.DESCRIPTION_XPATH)[0]
+            parsed_output = base_response.xpath(ReutersLibrary.DESCRIPTION_XPATH)
+            if len(parsed_output) > 0:
+                dictionary["description"] = parsed_output[0]
         
         try:
             category_stocks = models.CategoryStock.objects.filter(stock_id=stock.pk)

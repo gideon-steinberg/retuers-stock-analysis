@@ -47,6 +47,8 @@ class StockValue(models.Model):
     def create_stock_value(stock_id, buy, outperform, hold, underperform, sell,
                            no_opinion, mean, mean_last_month, consensus, dividend,
                            price_earnings, description):
+        if mean_last_month == "--":
+            mean_last_month = 0
         stock_value = StockValue(stock_id=stock_id, buy= buy, outperform= outperform,
                                  hold= hold, underperform=underperform, sell= sell,
                                  no_opinion= no_opinion,mean= mean, mean_last_month=mean_last_month,
