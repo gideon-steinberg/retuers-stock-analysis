@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 import json
+from reuters_library import ReutersLibrary 
 from Stocks import models
 
 def add_stock(request):
@@ -52,6 +53,8 @@ def stock_info(request):
         dictionary = {}
         dictionary["code"] = stock.code
         if stock_value == None:
+            base_response = ReutersLibrary.get_response(stock.code)
+            dictionary["description"] = base_response.xpath(ReutersLibrary.DESCRIPTION_XPATH)[0]
             return HttpResponse(json.dumps(dictionary))
         dictionary["description"] = stock_value.description
         dictionary["buy"] = stock_value.buy
@@ -76,7 +79,11 @@ def stock_info(request):
                     pass
             dictionary["categories"] = categories
         except models.CategoryStock.DoesNotExist:
-            pass
+            base_response = ReutersLibrary.get_response(stock.code)
+            dictionary = {}
+            dictionary["code"] = stock.code
+            dictionary["description"] = base_response.xpath(ReutersLibrary.DESCRIPTION_XPATH)[0]
+            return HttpResponse(json.dumps(dictionary))
         return HttpResponse(json.dumps(dictionary))
     except models.Stock.DoesNotExist:
         return HttpResponse("[]")
