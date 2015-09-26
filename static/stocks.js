@@ -56,6 +56,50 @@ function create_remove_button(tr, data){
   td.append(form);
 }
 
+function add_category_elements(tr, data){
+    var category_td = create_td(tr, data, false, false);
+    var category_remove_td = create_td(tr, data, false, false);
+    var categories = data.categories;
+    var length = categories.length;
+    var i = 0;
+    var form, input, button, p, span;
+  
+    for (i = 0; i < length; i++) {
+      p = $(document.createElement("p"));
+      p.html(categories[i]);
+      category_td.append(p);
+    
+    
+      form = $(document.createElement("form"));
+      button = $(document.createElement("button"));
+      span = $(document.createElement("span"));
+      
+      form.attr("action", "disassociate_stock_with_categories");
+  
+      input = $(document.createElement("input"));
+      input.attr("type", "hidden");
+      input.attr("name", "stock");
+      input.attr("value", data.code);
+      form.append(input);
+
+      input = $(document.createElement("input"));
+      input.attr("type", "hidden");
+      input.attr("name", "category");
+      input.attr("value", categories[i]);
+      form.append(input);
+
+  
+      button.attr("type", "submit");
+      button.attr("class", "btn btn-default");
+  
+      span.attr("class", "glyphicon glyphicon-minus text-danger");
+      button.html("&nbsp;");
+      button.append(span);
+      form.append(button);
+      category_remove_td.append(form);
+    }
+}
+
 function create_tr(data) {
   var tbody = $("tbody.stock-tbody");
   data = JSON.parse(data);
@@ -76,6 +120,7 @@ function create_tr(data) {
   create_td(tr, data, true, true ).html(data.price_earnings);
   create_link_ref(tr, data);
   create_remove_button(tr, data);
+  add_category_elements(tr, data);
   
   tbody.append(tr);
 }
