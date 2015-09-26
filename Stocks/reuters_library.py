@@ -13,6 +13,12 @@ class ReutersLibrary:
     PRICE_EARTINGS_XPATH ='//*[@id="companyVsIndustry"]/div/div[2]/table/tbody/tr[2]/td[2]/text()'
     MEAN_LAST_MONTH_XPATH = '//*[@id="content"]/div[2]/div/div[2]/div[1]/div[4]/div[2]/table/tbody/tr[9]/td[3]/text()'
     DESCRIPTION_XPATH = '//*[@id="sectionTitle"]/h1/text()'
+    
+    NZX50_URL = 'http://topforeignstocks.com/indices/components-of-the-nzsx-50-index/'
+    NZX_URL = 'https://www.nzx.com/markets/NZSX/securities'
+
+    NZX50_XPATH = '//*[@id="tablepress-915"]/tbody/tr/td[3]/text()'
+    NZX_XPATH = '//*[@id="instruments"]/table/tbody/tr/td[1]/a/text()'
 
     #=================FUNCTIONS=================#
 
@@ -37,3 +43,13 @@ class ReutersLibrary:
         values.append(base_response.xpath(ReutersLibrary.DESCRIPTION_XPATH)[0])
 
         return values
+    
+    @staticmethod
+    def get_NZX_50():
+        response = ReutersLibrary.get_response("", ReutersLibrary.NZX50_URL)
+        return response.xpath(ReutersLibrary.NZX50_XPATH)
+    
+    @staticmethod
+    def get_NZX():
+        response = ReutersLibrary.get_response("", ReutersLibrary.NZX_URL)
+        return response.xpath(ReutersLibrary.NZX_XPATH)

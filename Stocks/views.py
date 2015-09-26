@@ -5,23 +5,29 @@ import json
 from reuters_library import ReutersLibrary 
 from Stocks import models
 
-def add_stock(request):
+def add_stock_request(request):
     code = request.GET.get('stock')
+    add_stock(code)
+    return HttpResponseRedirect("/stocks/stocks")
+
+def add_stock(code):
     if code is not None:
         try:
             models.Stock.objects.get(code=code)
         except models.Stock.DoesNotExist:
             models.Stock.create_stock(code)
-    return HttpResponseRedirect("/stocks/stocks")
 
-def add_category(request):
+def add_category_request(request):
     name = request.GET.get('category')
+    add_category(name)
+    return HttpResponseRedirect("/stocks/stocks")
+    
+def add_category(name):
     if name is not None:
         try:
             models.Category.objects.get(name=name)
         except models.Category.DoesNotExist:
             models.Category.create_category(name)
-    return HttpResponseRedirect("/stocks/stocks")
 
 def remove_stock(request):
     code = request.GET.get('stock')
@@ -105,25 +111,29 @@ def categories(request):
         response.append(category.name)
     return HttpResponse(json.dumps(response))
 
-def associate_stock_with_categories(request):
+def associate_stock_with_categories_request(request):
     code = request.GET.get('stock')
     category_name = request.GET.get('category')
+    associate_stock_with_categories(code, category_name)
+    return HttpResponseRedirect("/stocks/stocks")
+
+def associate_stock_with_categories(code, category_name): 
     if code is None or category_name is None:
-        return HttpResponseRedirect("/stocks/stocks")
+        return
     try:
         stock = models.Stock.objects.get(code=code)
     except models.Stock.DoesNotExist:
-        return HttpResponseRedirect("/stocks/stocks")
+        return
     try:
         category = models.Category.objects.get(name=category_name)
     except models.Category.DoesNotExist:
-        return HttpResponseRedirect("/stocks/stocks")
+        return
     
     try:
         models.CategoryStock.objects.get(stock_id=stock.pk, category_id=category.pk)
     except models.CategoryStock.DoesNotExist:
         models.CategoryStock.create_category_stock(category.pk, stock.pk)
-    return HttpResponseRedirect("/stocks/stocks")
+    return
 
 def disassociate_stock_with_categories(request):
     code = request.GET.get('stock')
@@ -145,4 +155,21 @@ def disassociate_stock_with_categories(request):
             category_stock.delete()
     except models.CategoryStock.DoesNotExist:
         pass
+    return HttpResponseRedirect("/stocks/stocks")
+
+
+def add_stocks(stock_list, category):
+    add_category(category)
+    for stock in stock_list:
+        add_stock(stock)
+        associate_stock_with_categories(stock, category)
+
+def update_nzx_50(request):
+    stocks = ReutersLibrary.get_NZX_50()
+    add_stocks(stocks, "nzx_50")
+    return HttpResponseRedirect("/stocks/stocks")
+    
+def update_nzx(request):
+    stocks =  ReutersLibrary.get_NZX()
+    add_stocks(stocks, "nzx")
     return HttpResponseRedirect("/stocks/stocks")
