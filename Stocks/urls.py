@@ -4,7 +4,8 @@ from . import views
 
 urlpatterns = [
     url(r'^add_stock$', views.add_stock, name='add_stock'),
-    url(r'^add_category$', views.add_category, name='add_category$'),
+    url(r'^add_category$', views.add_category, name='add_category'),
+    url(r'^remove_category$', views.remove_category, name='remove_category'),
     url(r'^remove_stock$', views.remove_stock, name='remove_stock'),
     url(r'^stocks$', views.stocks, name='stocks'),
     url(r'^stock_list$', views.stock_list, name='stock_list'),

@@ -32,6 +32,16 @@ def remove_stock(request):
             pass
     return HttpResponseRedirect("/stocks/stocks")
 
+def remove_category(request):
+    category_name = request.GET.get('category')
+    if category_name is not None:
+        try:
+            category = models.Category.objects.get(name=category_name)
+            category.delete()
+        except models.Category.DoesNotExist:
+            pass
+    return HttpResponseRedirect("/stocks/stocks")
+
 def stock_info(request):
     code = request.GET.get('stock')
     if code is None:

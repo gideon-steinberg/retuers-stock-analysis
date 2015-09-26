@@ -1,3 +1,18 @@
+// helper function from http://www.jquerybyexample.net/2012/06/get-url-parameters-using-jquery.html
+function GetURLParameter(sParam)
+{
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) 
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) 
+        {
+            return sParameterName[1];
+        }
+    }
+}
+
 function update_td_style(td, mean, mean_difference){
   if(mean <= 2){
     td.css("background-color", "#00ff00");
@@ -27,6 +42,7 @@ function create_link_ref(tr, data){
   var td = create_td(tr, data, false, false);
   var a_ref = $(document.createElement("a"));
   a_ref.attr("href","http://www.reuters.com/finance/stocks/analyst?symbol="+data.code);
+  a_ref.attr("target", "_blank");
   a_ref.html(data.code);
   td.append(a_ref);
 }
@@ -59,6 +75,9 @@ function create_remove_button(tr, data){
 function add_category_elements(tr, data){
     var category_td = create_td(tr, data, false, false);
     var category_remove_td = create_td(tr, data, false, false);
+    if (!data.hasOwnProperty("categories")){
+        return;
+    }
     var categories = data.categories;
     var length = categories.length;
     var i = 0;
@@ -68,7 +87,6 @@ function add_category_elements(tr, data){
       p = $(document.createElement("p"));
       p.html(categories[i]);
       category_td.append(p);
-    
     
       form = $(document.createElement("form"));
       button = $(document.createElement("button"));
@@ -87,7 +105,6 @@ function add_category_elements(tr, data){
       input.attr("name", "category");
       input.attr("value", categories[i]);
       form.append(input);
-
   
       button.attr("type", "submit");
       button.attr("class", "btn btn-default");
@@ -101,8 +118,30 @@ function add_category_elements(tr, data){
 }
 
 function create_tr(data) {
-  var tbody = $("tbody.stock-tbody");
+  var category = GetURLParameter("category");
   data = JSON.parse(data);
+  if (typeof(category) !== 'undefined' ){
+
+    // oh my god spaces!!!
+    category = category.replace("+", " ");
+    var categories = data.categories;
+    if (typeof(categories) === 'undefined' ){
+      return;
+    }
+    var length = categories.length;
+    var i = 0;
+    var valid = false;
+    for (i = 0; i < length; i++) {
+      if (categories[i] == category){
+          valid = true;
+      }
+    }
+    if (valid === false){
+        return;
+    }
+  }
+  
+  var tbody = $("tbody.stock-tbody");
   var tr = $(document.createElement("tr"));
   
   // create all the data elements
@@ -162,6 +201,18 @@ function parse_category_list(data){
   
   var select = $("select.associate-select-category");
   populate_select(select, categories);
+  
+  select = $("select.remove-category-select");
+  populate_select(select, categories);
+  
+  var form = $("form.remove-category-form");
+  form.removeAttr("hidden");
+  
+  select = $("select.filter-category-select");
+  populate_select(select, categories);
+  
+  form = $("form.filter-form");
+  form.removeAttr("hidden");
 }
 
 function populate_select(select, data){

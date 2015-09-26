@@ -20,8 +20,8 @@
         <td class="text-center"> <strong> PE </strong> </td>
         <td> <strong> Link </strong> </td>
         <td> <strong> Delete </br> Stock </strong> </td>
-        <td> <strong> Categories </strong> </td>
-        <td> <strong> Remove </br> Category <strong> </td>
+        <td> <strong> Category </br> Associations </strong> </td>
+        <td> <strong> Remove </br> Category </br> Association <strong> </td>
       </tr>
     </thead>
     <tbody class="stock-tbody">
@@ -43,4 +43,16 @@
     <select class="form-control associate-select-stock" name="stock" > </select>
     <button type="submit" class="btn btn-default">Add Category/Stock Association</button>
   </form>
+  
+  <form hidden="true" class="form-inline remove-category-form" action="remove_category">
+    <select class="form-control remove-category-select" name="category" > </select>
+    <button type="submit" class="btn btn-default">Remove Category</button>
+  </form>
+  
+  <form hidden="true" class="form-inline filter-form" action="stocks">
+    <select class="form-control filter-category-select" name="category" > </select>
+    <button type="submit" class="btn btn-default">Filter</button>
+  </form>
+  
+  <a href="/stocks/stocks"> Reset Filters </a>
 {% endblock %}
