@@ -112,7 +112,10 @@ def associate_stock_with_categories(request):
     except models.Category.DoesNotExist:
         return HttpResponseRedirect("/stocks/stocks")
     
-    models.CategoryStock.create_category_stock(category.pk, stock.pk)
+    try:
+        models.CategoryStock.objects.get(stock_id=stock.pk, category_id=category.pk)
+    except models.CategoryStock.DoesNotExist:
+        models.CategoryStock.create_category_stock(category.pk, stock.pk)
     return HttpResponseRedirect("/stocks/stocks")
 
 def disassociate_stock_with_categories(request):
@@ -129,9 +132,10 @@ def disassociate_stock_with_categories(request):
     except models.Category.DoesNotExist:
         return HttpResponseRedirect("/stocks/stocks")
     try:
-        category_stock = models.CategoryStock.objects.get(stock_id=stock.pk,
+        category_stocks = models.CategoryStock.objects.filter(stock_id=stock.pk,
                                                            category_id=category.pk)
-        category_stock.delete()
+        for category_stock in category_stocks:
+            category_stock.delete()
     except models.CategoryStock.DoesNotExist:
         pass
     return HttpResponseRedirect("/stocks/stocks")
