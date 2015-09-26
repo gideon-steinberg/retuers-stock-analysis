@@ -11,6 +11,21 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='Category',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=200)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='CategoryStock',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('category_id', models.CharField(max_length=200)),
+                ('stock_id', models.CharField(max_length=200)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Stock',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),

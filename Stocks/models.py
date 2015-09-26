@@ -9,7 +9,7 @@ class Stock(models.Model):
         return self.code
     
     @staticmethod
-    def crete_stock(code):
+    def create_stock(code):
         stock = Stock(code=code)
         stock.save()
         return stock
@@ -83,3 +83,29 @@ class StockValue(models.Model):
         if self.get_mean_difference() <= -1:
             style = style + "font-weight: bold;"
         return style
+    
+class Category(models.Model):
+    name = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.name
+    
+    @staticmethod
+    def create_category(name):
+        category = Category(name=name)
+        category.save()
+        return category
+    
+class CategoryStock(models.Model):
+    category_id = models.CharField(max_length=200)
+    stock_id = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.name
+    
+    @staticmethod
+    def create_category_stock(category_id, stock_id):
+        category_stock = CategoryStock(category_id=category_id, stock_id=stock_id)
+        category_stock.save()
+        return category_stock
+    

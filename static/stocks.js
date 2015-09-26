@@ -80,22 +80,28 @@ function create_tr(data) {
   tbody.append(tr);
 }
 
-$( document ).ready(function() {
-  var stock_items = $("li.stock-item");
+function parse_stock_list(data){
   var stocks = [];
-  var index = 0;
-  var item;
-  var len = stock_items.length;
+  var i = 0;
+  data = JSON.parse(data);
+  var length = data.length;
   
-  for (index = 0; index < len; ++index) {
-    item = stock_items[index];
-    stocks.push(item.innerHTML); 
+  for (i = 0; i < length; i++) {
+    stocks.push(data[i]); 
   }
   
-  for (index = 0, len = stocks.length; index < len; ++index) {
+  length = stocks.length;
+  
+  for (i = 0; i < length; i++) {
     $.ajax({
-      url: "/stocks/stock_info?stock="+stocks[index],
+      url: "/stocks/stock_info?stock="+stocks[i],
     }).done(create_tr);
   }
   
+}
+
+$( document ).ready(function() {
+   $.ajax({
+      url: "/stocks/stock_list",
+    }).done(parse_stock_list); 
 });
