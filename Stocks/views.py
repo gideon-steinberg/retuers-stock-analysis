@@ -116,6 +116,7 @@ def stock_list(request):
     response = []
     for stock in stocks:
         response.append(stock.code)
+    response.sort()
     return HttpResponse(json.dumps(response))
 
 def categories(request):
@@ -123,6 +124,7 @@ def categories(request):
     response = []
     for category in categories:
         response.append(category.name)
+    response.sort()
     return HttpResponse(json.dumps(response))
 
 def associate_stock_with_categories_request(request):
