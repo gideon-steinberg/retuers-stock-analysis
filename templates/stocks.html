@@ -27,12 +27,18 @@
   </table>
 
   <form class="form-inline" action="add_stock">
-    <input type="text" class="form-control" name="stock" id="stock" placeholder="Enter Stock Code">
+    <input type="text" class="form-control" name="stock" placeholder="Enter Stock Code" />
     <button type="submit" class="btn btn-default">Add Stock</button>
   </form>
   
   <form class="form-inline" action="add_category">
-    <input type="text" class="form-control" name="category" id="category" placeholder="Enter Category Name">
+    <input type="text" class="form-control" name="category" placeholder="Enter Category Name" />
     <button type="submit" class="btn btn-default">Add Category</button>
+  </form>
+  
+  <form hidden="true" class="form-inline associate-form" action="associate_stock_with_categories">
+    <select class="form-control associate-select-category" name="category" > </select>
+    <select class="form-control associate-select-stock" name="stock" > </select>
+    <button type="submit" class="btn btn-default">Add Category/Stock Association</button>
   </form>
 {% endblock %}

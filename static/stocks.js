@@ -98,10 +98,49 @@ function parse_stock_list(data){
     }).done(create_tr);
   }
   
+  var select = $("select.associate-select-stock");
+  populate_select(select, stocks);
+  
+  var form = $("form.associate-form");
+  form.removeAttr("hidden");
+}
+
+function parse_category_list(data){
+  var categories = [];
+  var i = 0;
+  data = JSON.parse(data);
+  var length = data.length;
+  
+  for (i = 0; i < length; i++) {
+    categories.push(data[i]); 
+  }
+  
+  var select = $("select.associate-select-category");
+  populate_select(select, categories);
+}
+
+function populate_select(select, data){
+    var length = data.length;
+    var i = 0;
+    var option;
+    
+    // clear the select's html
+    select.html("");
+    
+    for (i = 0; i < length; i++) {
+        option = $(document.createElement("option"));
+        option.attr("value", data[i]);
+        option.html(data[i]);
+        select.append(option);
+    }
 }
 
 $( document ).ready(function() {
    $.ajax({
       url: "/stocks/stock_list",
     }).done(parse_stock_list); 
+    
+    $.ajax({
+      url: "/stocks/categories",
+    }).done(parse_category_list); 
 });

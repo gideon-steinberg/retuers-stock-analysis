@@ -54,6 +54,19 @@ def stock_info(request):
         dictionary["consensus"] = stock_value.consensus
         dictionary["dividend"] = stock_value.dividend
         dictionary["price_earnings"] = stock_value.price_earnings
+        
+        try:
+            category_stocks = models.CategoryStock.objects.filter(stock_id=stock.pk)
+            categories = []
+            for category_stock in category_stocks:
+                try:
+                    category = models.Category.objects.get(pk=category_stock.category_id)
+                    categories.append(category.name)
+                except models.Category.DoesNotExist:
+                    pass
+            dictionary["categories"] = categories
+        except models.CategoryStock.DoesNotExist:
+            pass
         return HttpResponse(json.dumps(dictionary))
     except models.Stock.DoesNotExist:
         return HttpResponse("[]")
@@ -85,7 +98,7 @@ def associate_stock_with_categories(request):
     except models.Stock.DoesNotExist:
         return HttpResponseRedirect("/stocks/stocks")
     try:
-        category = models.Category.objects.get(code=code)
+        category = models.Category.objects.get(name=category_name)
     except models.Category.DoesNotExist:
         return HttpResponseRedirect("/stocks/stocks")
     
@@ -102,7 +115,7 @@ def disassociate_stock_with_categories(request):
     except models.Stock.DoesNotExist:
         return HttpResponseRedirect("/stocks/stocks")
     try:
-        category = models.Category.objects.get(code=code)
+        category = models.Category.objects.get(name=category_name)
     except models.Category.DoesNotExist:
         return HttpResponseRedirect("/stocks/stocks")
     try:
