@@ -123,7 +123,7 @@ function create_tr(data) {
   if (typeof(category) !== 'undefined' ){
 
     // oh my god spaces!!!
-    category = category.replace("+", " ");
+    category = category.replace(/\+/g, " ");
     var categories = data.categories;
     if (typeof(categories) === 'undefined' ){
       return;
