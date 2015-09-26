@@ -2,12 +2,6 @@
 {% block content %}
   <script src="/static/stocks.js"></script>
   
-  <ul hidden="true">
-    {% for stock in stocks %}
-      <li class="stock-item" hidden="true">{{stock.code}}</li>
-    {% endfor %}
-  </ul>
-  
   <table class='table table-striped table-bordered'>
     <thead>
       <tr>

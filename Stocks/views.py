@@ -59,9 +59,7 @@ def stock_info(request):
         return HttpResponse("[]")
 
 def stocks(request):
-    stocks = models.Stock.objects.all()
-    context = {'stocks' : stocks}
-    return render(request, 'stocks.html', context)
+    return render(request, 'stocks.html', {})
 
 def stock_list(request):
     stocks = models.Stock.objects.all()
