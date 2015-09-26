@@ -118,29 +118,7 @@ function add_category_elements(tr, data){
 }
 
 function create_tr(data) {
-  var category = GetURLParameter("category");
   data = JSON.parse(data);
-  if (typeof(category) !== 'undefined' ){
-
-    // oh my god spaces!!!
-    category = category.replace(/\+/g, " ");
-    var categories = data.categories;
-    if (typeof(categories) === 'undefined' ){
-      return;
-    }
-    var length = categories.length;
-    var i = 0;
-    var valid = false;
-    for (i = 0; i < length; i++) {
-      if (categories[i] == category){
-          valid = true;
-      }
-    }
-    if (valid === false){
-        return;
-    }
-  }
-  
   var tbody = $("tbody.stock-tbody");
   var tr = $(document.createElement("tr"));
   
@@ -175,7 +153,7 @@ function parse_stock_list(data){
   }
   
   length = stocks.length;
-  
+
   for (i = 0; i < length; i++) {
     $.ajax({
       url: "/stocks/stock_info?stock="+stocks[i],
@@ -240,8 +218,13 @@ function populate_select(select, data){
 }
 
 $( document ).ready(function() {
+  var category = GetURLParameter("category");
+  var category_filter = "";
+  if (typeof(category) !== 'undefined') {
+      category_filter = "?category=" + category;
+  }
    $.ajax({
-      url: "/stocks/stock_list",
+      url: "/stocks/stock_list"+category_filter,
     }).done(parse_stock_list); 
     
     $.ajax({

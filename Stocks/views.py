@@ -58,21 +58,21 @@ def stock_info(request):
         stock_value = stock.create_stock_value()
         dictionary = {}
         dictionary["code"] = stock.code
-        if stock_value == None:
+        if stock_value is not None:
+            dictionary["description"] = stock_value.description
+            dictionary["buy"] = stock_value.buy
+            dictionary["outperform"] = stock_value.outperform
+            dictionary["hold"] = stock_value.hold
+            dictionary["underperform"] = stock_value.underperform
+            dictionary["sell"] = stock_value.sell
+            dictionary["mean"] = stock_value.mean
+            dictionary["mean_difference"] = stock_value.get_mean_difference()
+            dictionary["consensus"] = stock_value.consensus
+            dictionary["dividend"] = stock_value.dividend
+            dictionary["price_earnings"] = stock_value.price_earnings
+        else:
             base_response = ReutersLibrary.get_response(stock.code)
             dictionary["description"] = base_response.xpath(ReutersLibrary.DESCRIPTION_XPATH)[0]
-            return HttpResponse(json.dumps(dictionary))
-        dictionary["description"] = stock_value.description
-        dictionary["buy"] = stock_value.buy
-        dictionary["outperform"] = stock_value.outperform
-        dictionary["hold"] = stock_value.hold
-        dictionary["underperform"] = stock_value.underperform
-        dictionary["sell"] = stock_value.sell
-        dictionary["mean"] = stock_value.mean
-        dictionary["mean_difference"] = stock_value.get_mean_difference()
-        dictionary["consensus"] = stock_value.consensus
-        dictionary["dividend"] = stock_value.dividend
-        dictionary["price_earnings"] = stock_value.price_earnings
         
         try:
             category_stocks = models.CategoryStock.objects.filter(stock_id=stock.pk)
@@ -85,11 +85,7 @@ def stock_info(request):
                     pass
             dictionary["categories"] = categories
         except models.CategoryStock.DoesNotExist:
-            base_response = ReutersLibrary.get_response(stock.code)
-            dictionary = {}
-            dictionary["code"] = stock.code
-            dictionary["description"] = base_response.xpath(ReutersLibrary.DESCRIPTION_XPATH)[0]
-            return HttpResponse(json.dumps(dictionary))
+            pass
         return HttpResponse(json.dumps(dictionary))
     except models.Stock.DoesNotExist:
         return HttpResponse("[]")
@@ -98,7 +94,23 @@ def stocks(request):
     return render(request, 'stocks.html', {})
 
 def stock_list(request):
+    category_name = request.GET.get('category')
     stocks = models.Stock.objects.all()
+    if category_name is not None:
+        try:
+            category = models.Category.objects.get(name=category_name)
+            category_stocks = models.CategoryStock.objects.filter(category_id=category.pk)
+            stocks = []
+            for category_stock in category_stocks:
+                try: 
+                    stock = models.Stock.objects.get(pk=category_stock.stock_id)
+                    stocks.append(stock)
+                except models.Stock.DoesNotExist:
+                    pass
+        except models.Category.DoesNotExist:
+            pass
+        except models.CategoryStock.DoesNotExist:
+            stocks = []
     response = []
     for stock in stocks:
         response.append(stock.code)
