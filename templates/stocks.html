@@ -1,5 +1,13 @@
 {% extends "header.html" %}
 {% block content %}
+  <script src="/static/stocks.js"></script>
+  
+  <ul hidden="true">
+    {% for stock in stocks %}
+      <li class="stock-item" hidden="true">{{stock.code}}</li>
+    {% endfor %}
+  </ul>
+  
   <table class='table table-striped table-bordered'>
     <thead>
       <tr>
@@ -19,30 +27,7 @@
         <td> </td>
       </tr>
     </thead>
-    <tbody>
-      {% for stock_value in stock_values %}
-        <tr>
-          <td style='{{stock_value.get_row_style}}'> {{stock_value.get_stock_code}} </td>
-          <td style='{{stock_value.get_row_style}}'> {{stock_value.description}} </td>
-          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.buy}} </td>
-          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.outperform}} </td>
-          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.hold}} </td>
-          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.underperform}} </td>
-          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.sell}} </td>
-          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.mean}} </td>
-          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.get_mean_difference}} </td>
-          <td style='{{stock_value.get_row_style}}'> {{stock_value.consensus}} </td>
-          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.dividend}} </td>
-          <td class="text-center" style='{{stock_value.get_row_style}}'> {{stock_value.price_earnings}} </td> 
-          <td> <a href="http://www.reuters.com/finance/stocks/analyst?symbol={{stock_value.get_stock_code}}">{{stock_value.get_stock_code}}</a></td>
-          <td>
-              <form action="remove_stock">
-                <input type="hidden" name="stock" value="{{stock_value.get_stock_code}}" />
-                <button type="submit" class="btn btn-default" >  <span class="glyphicon glyphicon-minus text-danger"></span>&nbsp; </button>
-              </form>
-          </td>
-        </tr>
-      {% endfor %}
+    <tbody class="stock-tbody">
     </tbody>
   </table>
   

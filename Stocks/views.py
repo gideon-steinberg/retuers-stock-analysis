@@ -46,12 +46,6 @@ def stock_info(request):
         return HttpResponse("[]")
 
 def stocks(request):
-    models.StockValue.update_stock_values()
     stocks = models.Stock.objects.all()
-    stock_values = []
-    for stock in stocks:
-        stock_value = models.StockValue.objects.filter(stock_id=stock.pk).order_by("time").last()
-        if stock_value != None:
-            stock_values.append(stock_value)
-    context = {'stock_values': stock_values}
+    context = {'stocks' : stocks}
     return render(request, 'stocks.html', context)
