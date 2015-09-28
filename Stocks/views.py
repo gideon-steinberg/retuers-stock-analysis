@@ -54,28 +54,11 @@ def stock_info(request):
     if code is None:
         return HttpResponseRedirect("/stocks/stocks")
     try:
-        stock = models.Stock.objects.get(code=code)
-        stock_value = stock.create_stock_value()
-        dictionary = {}
-        dictionary["code"] = stock.code
-        if stock_value is not None:
-            dictionary["description"] = stock_value.description
-            dictionary["buy"] = stock_value.buy
-            dictionary["outperform"] = stock_value.outperform
-            dictionary["hold"] = stock_value.hold
-            dictionary["underperform"] = stock_value.underperform
-            dictionary["sell"] = stock_value.sell
-            dictionary["mean"] = stock_value.mean
-            dictionary["mean_difference"] = stock_value.get_mean_difference()
-            dictionary["consensus"] = stock_value.consensus
-            dictionary["dividend"] = stock_value.dividend
-            dictionary["price_earnings"] = stock_value.price_earnings
-        else:
-            base_response = ReutersLibrary.get_response(stock.code)
-            parsed_output = base_response.xpath(ReutersLibrary.DESCRIPTION_XPATH)
-            if len(parsed_output) > 0:
-                dictionary["description"] = parsed_output[0]
-        
+        dictionary = ReutersLibrary.get_stock_values(code)
+        try:
+            stock = models.Stock.objects.get(code=code)
+        except models.Stock.DoesNotExist:
+            return HttpResponseRedirect("/stocks/stocks")
         try:
             category_stocks = models.CategoryStock.objects.filter(stock_id=stock.pk)
             categories = []

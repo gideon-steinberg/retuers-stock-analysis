@@ -33,21 +33,42 @@ class ReutersLibrary:
     def get_stock_values(stock_name):
         base_response = ReutersLibrary.get_response(stock_name)
         overview_response = ReutersLibrary.get_response(stock_name, path=ReutersLibrary.REUTERS_OVERVIEW_URL)
-        values = base_response.xpath(ReutersLibrary.RATINGS_XPATH)
-        if len(values) < 5:
-            return []
-        values.append(base_response.xpath(ReutersLibrary.MEAN_LAST_MONTH_XPATH)[0])
-        values.append(base_response.xpath(ReutersLibrary.CONSENSUS_XPATH)[0])
+        basic_values = base_response.xpath(ReutersLibrary.RATINGS_XPATH)
+        
+        result = {"code" : stock_name}
+        if len(basic_values) > 0:
+            result["buy"] = basic_values[0] 
+            result["outperform"] = basic_values[1] 
+            result["hold"] = basic_values[2] 
+            result["underperform"] = basic_values[3] 
+            result["sell"] = basic_values[4] 
+            result["no_opinion"] = basic_values[5] 
+            result["mean"] = basic_values[6] 
+        
+            mean_last_month = base_response.xpath(ReutersLibrary.MEAN_LAST_MONTH_XPATH)[0]
+            if mean_last_month == "--":
+                mean_last_month = 0
+            difference = float(result["mean"]) - float(mean_last_month)
+            if difference == 0:
+                difference = ""
+            else:
+                # formatting......
+                difference = float(format(difference, '.4f'))
+            result["mean_difference"] = difference
+            result["consensus"] = base_response.xpath(ReutersLibrary.CONSENSUS_XPATH)[0]
+            result["price_earnings"] = overview_response.xpath(ReutersLibrary.PRICE_EARTINGS_XPATH)[0].strip()
         
         parsed_output = overview_response.xpath(ReutersLibrary.DIVIDENDS_XPATH)
         dividend = "--"
         if len(parsed_output) > 0:
             dividend = parsed_output[0]
-        values.append(dividend)
-        values.append(overview_response.xpath(ReutersLibrary.PRICE_EARTINGS_XPATH)[0].strip())
-        values.append(base_response.xpath(ReutersLibrary.DESCRIPTION_XPATH)[0])
-
-        return values
+        result["dividend"] = dividend
+        
+        parsed_output = base_response.xpath(ReutersLibrary.DESCRIPTION_XPATH)
+        if len(parsed_output) > 0:
+            result["description"] = parsed_output[0]
+        
+        return result
     
     @staticmethod
     def get_NZX_50():
