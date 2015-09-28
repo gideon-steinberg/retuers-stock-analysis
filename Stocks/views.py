@@ -61,13 +61,14 @@ def stock_info(request):
             return HttpResponseRedirect("/stocks/stocks")
         try:
             category_stocks = models.CategoryStock.objects.filter(stock_id=stock.pk)
-            categories = []
+            categories = set()
             for category_stock in category_stocks:
                 try:
                     category = models.Category.objects.get(pk=category_stock.category_id)
-                    categories.append(category.name)
+                    categories.add(category.name)
                 except models.Category.DoesNotExist:
                     pass
+            categories = list(categories)
             dictionary["categories"] = categories
         except models.CategoryStock.DoesNotExist:
             pass
