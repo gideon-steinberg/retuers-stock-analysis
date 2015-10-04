@@ -4,9 +4,16 @@ from django.http import HttpResponseRedirect
 import json
 from reuters_library import ReutersLibrary 
 from Stocks import models
+import re
+
+def get_string_from_request(string_name, request):
+    string = request.GET.get(string_name)
+    if string == None:
+        return None
+    return re.sub("[^0123456789\.\w\s]","",string)
 
 def add_stock_request(request):
-    code = request.GET.get('stock')
+    code = get_string_from_request('stock', request)
     add_stock(code)
     return HttpResponseRedirect("/stocks/stocks")
 
@@ -18,7 +25,7 @@ def add_stock(code):
             models.Stock.create_stock(code)
 
 def add_category_request(request):
-    name = request.GET.get('category')
+    name = get_string_from_request('category', request)
     add_category(name)
     return HttpResponseRedirect("/stocks/stocks")
     
@@ -30,7 +37,7 @@ def add_category(name):
             models.Category.create_category(name)
 
 def remove_stock(request):
-    code = request.GET.get('stock')
+    code = get_string_from_request('stock', request)
     if code is not None:
         try:
             stock = models.Stock.objects.get(code=code)
@@ -40,7 +47,7 @@ def remove_stock(request):
     return HttpResponseRedirect("/stocks/stocks")
 
 def remove_category(request):
-    category_name = request.GET.get('category')
+    category_name = get_string_from_request('category', request)
     if category_name is not None:
         try:
             category = models.Category.objects.get(name=category_name)
@@ -50,7 +57,7 @@ def remove_category(request):
     return HttpResponseRedirect("/stocks/stocks")
 
 def stock_info(request):
-    code = request.GET.get('stock')
+    code = get_string_from_request('stock', request)
     if code is None:
         return HttpResponseRedirect("/stocks/stocks")
     try:
@@ -80,7 +87,7 @@ def stocks(request):
     return render(request, 'stocks.html', {})
 
 def stock_list(request):
-    category_name = request.GET.get('category')
+    category_name = get_string_from_request('category', request)
     stocks = models.Stock.objects.all()
     if category_name is not None:
         try:
@@ -112,8 +119,8 @@ def categories(request):
     return HttpResponse(json.dumps(response))
 
 def associate_stock_with_categories_request(request):
-    code = request.GET.get('stock')
-    category_name = request.GET.get('category')
+    code = get_string_from_request('stock', request)
+    category_name = get_string_from_request('category', request)
     associate_stock_with_categories(code, category_name)
     return HttpResponseRedirect("/stocks/stocks")
 
@@ -132,8 +139,8 @@ def associate_stock_with_categories(code, category_name):
     models.CategoryStock.create_category_stock(category.pk, stock.pk)
 
 def disassociate_stock_with_categories_request(request):
-    code = request.GET.get('stock')
-    category_name = request.GET.get('category')
+    code = get_string_from_request('stock', request)
+    category_name = get_string_from_request('category', request)
     disassociate_stock_with_categories(code, category_name)
     return HttpResponseRedirect("/stocks/stocks")
     
@@ -157,7 +164,7 @@ def disassociate_stock_with_categories(code, category_name):
         pass
 
 def disassociate_stock_from_category_request(request):
-    category_name = request.GET.get('category')
+    category_name = get_string_from_request('category', request)
     disassociate_stock_from_category(category_name)
     return HttpResponseRedirect("/stocks/stocks")
 
